@@ -18,6 +18,8 @@ namespace WebRauTNT.Models
         public virtual DbSet<LoaiSP> LoaiSP { get; set; }
         public virtual DbSet<SanPham> SanPham { get; set; }
 
+        public virtual DbSet<LienHe> LienHe { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 

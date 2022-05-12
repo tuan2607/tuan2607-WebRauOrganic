@@ -215,6 +215,7 @@
     <Compile Include="Models\DonHang.cs" />
     <Compile Include="Models\Giohang.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LienHe.cs" />
     <Compile Include="Models\LinQ\MyData.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -329,6 +330,7 @@
     <Content Include="Content\images\products\tiato.png" />
     <Content Include="Content\images\products\traicay.jpeg" />
     <Content Include="Content\img\banner.jpg" />
+    <Content Include="Content\img\breadcrumb.jpg" />
     <Content Include="Content\img\chitiet.png" />
     <Content Include="Content\img\iconOr.jpeg" />
     <Content Include="Content\img\language.png" />

@@ -13,25 +13,6 @@ namespace WebRauTNT.Controllers
 {
     public class HomeController : Controller
     {
-        /*        public ActionResult Index()
-                {
-                    return View();
-                }
-
-                public ActionResult About()
-                {
-                    ViewBag.Message = "Your application description page.";
-
-                    return View();
-                }
-
-                public ActionResult Contact()
-                {
-                    ViewBag.Message = "Your contact page.";
-
-                    return View();
-                }*/
-
         private WebRauTNTContext db = new WebRauTNTContext();
 
         public ActionResult Index()
@@ -62,6 +43,22 @@ namespace WebRauTNT.Controllers
         public ActionResult Contact()
         {
             return View();
+        }
+        [HttpPost]
+        public ActionResult SubmitContact(LienHe LienHe)
+        {
+            LienHe.FullName = Request.Form["Fullname"];
+            LienHe.Email = Request.Form["Email"];
+            LienHe.Phone = Convert.ToInt32(Request.Form["Phone"]);
+            LienHe.Title = Request.Form["Title"];
+            LienHe.Detail = Request.Form["Detail"];
+            LienHe.Status = 1;
+            LienHe.Created_at = DateTime.Now;
+            LienHe.Updated_at = DateTime.Now;
+            LienHe.Updated_by = 1;
+            db.LienHe.Add(LienHe);
+            db.SaveChanges();
+            return RedirectToAction("Contact", "Home");
         }
         public ActionResult ShopDetails()
         {
