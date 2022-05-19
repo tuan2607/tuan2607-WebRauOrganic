@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebRauTNT.Models;
+using WebRauTNT.Models.LinQ;
 
 namespace WebRauTNT.Controllers
 {
@@ -17,7 +18,7 @@ namespace WebRauTNT.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        MyDataDataContext context = new MyDataDataContext();
         public AccountController()
         {
         }
@@ -79,7 +80,16 @@ namespace WebRauTNT.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    {
+                        var kh = context.AspNetUsers.Where(p => p.Email == model.Email).FirstOrDefault();
+                        if (kh.LockoutEnabled == false)
+                        {
+                            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                            return View("Lockout");
+                        }
+                        Session["TaiKhoan"] = kh;
+                        return RedirectToLocal(returnUrl);
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

@@ -7,11 +7,11 @@
 
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form", @style = "width:500px" }))
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form", @style = "width:1000px" }))
         {
             @Html.AntiForgeryToken()
             <div class="col-md-offset-1">
-                <div class="signup-form" style="background-color:azure;">
+                <div class="signup-form" style="background-color: #CEF6CE;">
                     <h2 class="text-center">Đăng ký</h2>
                     <hr />
                     @Html.ValidationSummary("", new { @class = "text-danger", @style = "font-size: 14px;" })
@@ -34,7 +34,7 @@
                         @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Địa chỉ", @style = "height:50px" })
                     </div>
                     <div class="form-group">
-                        <input type="submit" class="btn btn-blue btn-block text-center" value="Đăng ký" style="background-color: #44c5ee" />
+                        <input type="submit" class="btn btn-blue btn-block text-center" value="Đăng ký" style="background-color: #7fad39" />
                     </div>
                     <div class="form-group text-center">
                         @Html.ActionLink("Đã có tài khoản", "Login", routeValues: null, htmlAttributes: new { @class = "btn-outline-info", @style = "margin-top:10px; font-size: 12px; text-decoration:none;" })
