@@ -138,13 +138,13 @@ namespace WebRauTNT.Controllers
         }
 
         //Dăt hàng
-        
+        [HttpGet]
         public ActionResult Dathang()
         {
-            /*if (Session["TaiKhoan"] == null || Session["TaiKhoan"].ToString() == "")
+            if (Session["TaiKhoan"] == null || Session["TaiKhoan"].ToString() == "")
             {
                 return RedirectToAction("Login", "Account");
-            }*/
+            }
             if (Session["Giohang"] == null)
             {
                 return RedirectToAction("Index", "Home");
@@ -156,11 +156,11 @@ namespace WebRauTNT.Controllers
             return View(lstGiohang);
         }
 
-/*        public ActionResult Dathang(FormCollection collection)
+        public ActionResult Dathang(FormCollection collection)
         {
             DonHang dh = new DonHang();
             Models.LinQ.AspNetUser kh = (Models.LinQ.AspNetUser)Session["TaiKhoan"];
-            *//*AspNetUsers kh = (AspNetUsers)Session["TaiKhoan"];*//*
+            //AspNetUsers kh = (AspNetUsers)Session["TaiKhoan"];
 
             List<Giohang> gh = LayGioHang();
             var ngaygiao = String.Format("{0:MM/dd/yyyy}", collection["NgayGiao"]);
@@ -187,7 +187,7 @@ namespace WebRauTNT.Controllers
             }
             Session["Giohang"] = null;
             return RedirectToAction("XacNhanDonHang", "GioHang");
-        }*/
+        }
 
         public ActionResult XacNhanDonHang()
         {
