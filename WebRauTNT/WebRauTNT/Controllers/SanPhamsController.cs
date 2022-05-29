@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Services.WebApi;
 using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -16,12 +17,6 @@ namespace WebRauTNT.Controllers
     {
         private WebRauTNTContext db = new WebRauTNTContext();
         private ApplicationDbContext data = new ApplicationDbContext();
-        // GET: SanPhams
-/*        public ActionResult Index()
-        {
-            return View();
-        }*/
-
         // GET: SanPhams
         public ActionResult Index(int? page, string searchString)
         {
@@ -36,7 +31,6 @@ namespace WebRauTNT.Controllers
 
                 LoaiSPs = loaiSP,
                 //SanPhams = (PagedList<SanPham>)all_sanPham.ToPagedList(pageNum, pageSize)
-                // SanPhams = (PagedList<SanPham>)SanPham.getAll(searchString).ToPagedList(pageNum, pageSize)
                 SanPhams = (PagedList.PagedList<SanPham>)SanPham.getAll(searchString).ToPagedList(pageNum, pageSize)
             };
 
@@ -45,6 +39,18 @@ namespace WebRauTNT.Controllers
             return View(sp);
         }
 
+        // GET: SanPhams Admin
+
+        public ActionResult IndexAdmin(int? page, string searchString)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            ViewBag.Keyword = searchString;
+            //var all_sanPham = db.SanPham.ToList();
+            int pageSize = 5;
+            int pageNum = page ?? 1;
+            return View(SanPham.getAll(searchString).ToPagedList(pageNum, pageSize));
+        }
 
         // GET: SanPhams/Details/5
         public ActionResult Details(int? id, int? page)
@@ -61,18 +67,35 @@ namespace WebRauTNT.Controllers
             foreach (var i in sanPham.BinhLuan)
             {
                 ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(i.MaKH);
-                i.Name = user.UserName;
+                i.Name = user.Name;
             }
             int pageSize = 5;
             int pageNum = page ?? 1;
             SanPhamDetailModel sp = new SanPhamDetailModel
             {
                 SanPham = sanPham,
-                //BinhLuans = (PagedList<BinhLuan>)sanPham.BinhLuan.ToPagedList(pageNum, pageSize)
                 BinhLuans = (PagedList.PagedList<BinhLuan>)sanPham.BinhLuan.ToPagedList(pageNum, pageSize)
             };
             return View(sp);
         }
+
+        // GET: SanPhams/Details/5 Admin
+        public ActionResult DetailsAdmin(int? id)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            SanPham sanPham = db.SanPham.Find(id);
+            if (sanPham == null)
+            {
+                return HttpNotFound();
+            }
+            return View(sanPham);
+        }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,8 +108,139 @@ namespace WebRauTNT.Controllers
             {
                 return RedirectToAction("Details");
             }
-            //addbinhluan.Create(content, id, binhLuan);
+            addbinhluan.Create(content, id, binhLuan);
             return RedirectToAction("Details");
+        }
+
+        // GET: SanPhams/Create
+        public ActionResult Create()
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            ViewBag.MaLoai = new SelectList(db.LoaiSP, "MaLoai", "TenLoai");
+            return View();
+        }
+
+        // POST: SanPhams/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "MaSP,MaLoai,Ten,MoTa,Gia,SoLuong,DonVi,GiamGia,Hinh")] SanPham sanPham)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            if (ModelState.IsValid)
+            {
+                db.SanPham.Add(sanPham);
+                db.SaveChanges();
+                TempData["AlertMessage"] = "Thêm thành công!";
+                return RedirectToAction("Create");
+            }
+
+            ViewBag.MaLoai = new SelectList(db.LoaiSP, "MaLoai", "TenLoai", sanPham.MaLoai);
+            return View(sanPham);
+        }
+
+        // GET: SanPhams/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            SanPham sanPham = db.SanPham.Find(id);
+            if (sanPham == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.MaLoai = new SelectList(db.LoaiSP, "MaLoai", "TenLoai", sanPham.MaLoai);
+            return View(sanPham);
+        }
+
+        // POST: SanPhams/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "MaSP,MaLoai,Ten,MoTa,Gia,SoLuong,DonVi,GiamGia,Hinh")] SanPham sanPham)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            if (ModelState.IsValid)
+            {
+                db.Entry(sanPham).State = EntityState.Modified;
+                db.SaveChanges();
+                TempData["AlertMessage"] = "Chỉnh sửa thành công!";
+                return RedirectToAction("IndexAdmin");
+            }
+            ViewBag.MaLoai = new SelectList(db.LoaiSP, "MaLoai", "TenLoai", sanPham.MaLoai);
+            return View(sanPham);
+        }
+
+        // GET: SanPhams/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            SanPham sanPham = db.SanPham.Find(id);
+            if (sanPham == null)
+            {
+                return HttpNotFound();
+            }
+            return View(sanPham);
+        }
+
+        // POST: SanPhams/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            if (!AuthAdmin())
+                return RedirectToAction("Error401", "Admin");
+            SanPham sanPham = db.SanPham.Find(id);
+            db.SanPham.Remove(sanPham);
+            db.SaveChanges();
+            TempData["AlertMessage"] = "Xoá thành công!";
+            return RedirectToAction("IndexAdmin");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        public string ProcessUpload(HttpPostedFileBase file)
+        {
+            if (file == null)
+            {
+                return "";
+            }
+            file.SaveAs(Server.MapPath("~/Content/images/" + file.FileName));
+            return "/Content/images/" + file.FileName;
+        }
+
+        public bool AuthAdmin()
+        {
+            var user = data.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            if (user == null)
+                return false;
+            var userExist = user.Roles.FirstOrDefault(r => r.UserId == user.Id);
+            if (userExist == null)
+                return false;
+            if (userExist.RoleId != "1")
+                return false;
+            return true;
         }
     }
 }
