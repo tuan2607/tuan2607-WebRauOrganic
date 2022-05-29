@@ -90,7 +90,6 @@
         </div>
     </div>
     <!-- Humberger End -->
-
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
@@ -116,10 +115,10 @@
                                 <img src="~/Template/img/cvn.png" alt="">
                                 <div>Tiếng Việt</div>
                                 <span class="arrow_carrot-down"></span>
-@*                                <ul>
-                                    <li><a href="#">Spanis</a></li>
-                                    <li><a href="#">English</a></li>
-                                </ul>*@
+                                @*                                <ul>
+                                        <li><a href="#">Spanis</a></li>
+                                        <li><a href="#">English</a></li>
+                                    </ul>*@
                             </div>
                             <div class="header__top__right__auth">
                                 @*<a href="@Url.Action("DangNhap", "Nguoidung")"><i class="fa fa-user"></i> Login</a>*@
@@ -142,7 +141,7 @@
                 <div class="col-lg-9">
                     <nav class="header__menu">
                         <ul>
-                            <li class="active"><a href=@Url.Action("Index", "Home")>Home</a></li>
+                            <li><a href=@Url.Action("Index", "Home")>Home</a></li>
                             <li><a href="@Url.Action("Index", "Sanphams")">Sản phẩm</a></li>
                             <li><a href="@Url.Action("Contact", "Home")">Liên hệ</a></li>
                             <li><a href="@Url.Action("Giohang", "Giohang")">Giỏ hàng</a></li>
@@ -173,14 +172,14 @@
                             <i class="fa fa-bars"></i>
                             <span>Các loại sản phẩm</span>
                         </div>
-@*                        <ul>
-                            <li><a href="#">Rau tươi</a></li>
-                            <li><a href="#">Củ quả</a></li>
-                            <li><a href="#">Trái cây</a></li>
-                            <li><a href="#">Rau mùi</a></li>
+                        @*                        <ul>
+                                <li><a href="#">Rau tươi</a></li>
+                                <li><a href="#">Củ quả</a></li>
+                                <li><a href="#">Trái cây</a></li>
+                                <li><a href="#">Rau mùi</a></li>
 
 
-                        </ul>*@
+                            </ul>*@
                     </div>
                 </div>
 
@@ -287,7 +286,12 @@
     <script src="~/Template/js/mixitup.min.js"></script>
     <script src="~/Template/js/owl.carousel.min.js"></script>
     <script src="~/Template/js/main.js"></script>
-
+    <script>
+        Array.from($('.header__menu ul li a')).forEach(function (item) {
+            if (item.href.split('/')[3] == window.location.href.split('/')[3])
+                item.parentElement.classList.add('active')
+        })
+    </script>
     <script src="~/Template/js/main.js"></script>
 
 </body>
