@@ -206,6 +206,7 @@
     <Compile Include="Controllers\DonHangController.cs" />
     <Compile Include="Controllers\GioHangController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoaiSPController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SanPhamsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -656,6 +657,13 @@
     <Content Include="Views\SanPhams\Create.cshtml" />
     <Content Include="Views\SanPhams\Edit.cshtml" />
     <Content Include="Views\SanPhams\Delete.cshtml" />
+    <Content Include="Views\BinhLuans\Details.cshtml" />
+    <Content Include="Views\BinhLuans\Delete.cshtml" />
+    <Content Include="Views\LoaiSP\Index.cshtml" />
+    <Content Include="Views\LoaiSP\Details.cshtml" />
+    <Content Include="Views\LoaiSP\Create.cshtml" />
+    <Content Include="Views\LoaiSP\Edit.cshtml" />
+    <Content Include="Views\LoaiSP\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
